@@ -3,6 +3,11 @@ import axios from "axios";
 import Action from "./Action";
 
 const Project = (props) => {
+  const [action, setAction] = useState({
+    project_id: props.project.id,
+    description: "",
+    notes: "",
+  });
   const [actions, setActions] = useState([]);
   const [editProject, setEditProject] = useState({
     name: props.project.name,
@@ -19,7 +24,7 @@ const Project = (props) => {
       .catch((err) => {
         console.log(err);
       });
-  }, [props.refresh]);
+  }, [props.refresh, props.project.id]);
 
   const deleteProjectHandler = (e) => {
     e.preventDefault();
@@ -68,6 +73,28 @@ const Project = (props) => {
   const cancelEdit = (e) => {
     setEditToggle(false);
   };
+
+  const actionInputChange = (e) => {
+    setAction({
+      ...action,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const onActionSubmit = (e) => {
+    axios
+      .post(
+        `http://localhost:4000/api/actions/project/${props.project.id}`,
+        action
+      )
+      .then((res) => {
+        console.log(res);
+        //   props.setRefresh(!props.refresh);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       {editToggle ? (
@@ -99,6 +126,24 @@ const Project = (props) => {
           <h2>Description:</h2>
           <p>{props.project.description}</p>
           <h3>Actions</h3>
+          <h4>Add a New Action</h4>
+          <form className="form" onSubmit={onActionSubmit}>
+            <label>Description:</label>
+            <input
+              type="text"
+              name="description"
+              value={action.description}
+              onChange={actionInputChange}
+            />
+            <label>Description:</label>
+            <input
+              type="text"
+              name="notes"
+              value={action.notes}
+              onChange={actionInputChange}
+            />
+            <button type="submit">Submit</button>
+          </form>
           {actions.length !== 0 &&
             actions.map((action, index) => {
               return (
