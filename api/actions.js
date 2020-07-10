@@ -31,6 +31,19 @@ router.post("/project/:id", validateProjectId, validateAction, (req, res) => {
     });
 });
 
+router.put("/:id", (req, res) => {
+  const updatedAction = req.body;
+  Actions.update(req.params.id, updatedAction)
+    .then((action) => {
+      res.status(200).json(action);
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: "The action information could not be modified.",
+      });
+    });
+});
+
 router.delete("/:id", (req, res) => {
   Actions.remove(req.params.id)
     .then((count) => {

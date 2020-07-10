@@ -1,24 +1,76 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import axios from "axios";
+import Project from "./components/Project";
 
 function App() {
+  const [project, setProject] = useState({
+    name: "",
+    description: "",
+  });
+  const [projects, setProjects] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:4000/api/projects`)
+      .then((res) => {
+        setProjects(res.data.projects);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [refresh]);
+
+  const projectInputChange = (e) => {
+    setProject({
+      ...project,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const onSubmit = (e) => {
+    axios
+      .post("http://localhost:4000/api/projects", project)
+      .then((res) => {
+        setRefresh(!refresh);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="project">
+      <div className="addProject">
+        <h2>Add a Project</h2>
+        <form className="form" onSubmit={onSubmit}>
+          <label>Name:</label>
+          <input
+            type="text"
+            name="name"
+            value={project.name}
+            onChange={projectInputChange}
+          />
+          <label>Description:</label>
+          <input
+            type="text"
+            name="description"
+            value={project.description}
+            onChange={projectInputChange}
+          />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      {projects.map((project, index) => {
+        return (
+          <Project
+            key={index}
+            project={project}
+            refresh={refresh}
+            setRefresh={setRefresh}
+          />
+        );
+      })}
     </div>
   );
 }

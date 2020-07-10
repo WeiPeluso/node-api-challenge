@@ -39,14 +39,21 @@ Commit your code regularly and use descriptive messages. This helps both you (in
 Demonstrate your understanding of this Sprint's concepts by answering the following free-form questions. Edit this document to include your answers after each question. Make sure to leave a blank line above and below your answer so it is clear and easy to read by your Team Lead.
 
 - [ ] Mention two parts of Express that you learned about this week.
+      Server-Side Routing with Express and Express Middleware
 
 - [ ] Describe Middleware?
+      Express middleware is compatible with connect middleware. Connect is a web application framework for Node.js that only provides the middleware layer.
 
 - [ ] Describe a Resource?
 
+REST’s ‘resources’ are the core pieces of data that your application acts on. These will often correspond to the Models in your application .
+API design at Level 1 is all about using different URLs to interact with the different resources in your application.
+
 - [ ] What can the API return to help clients know if a request was successful?
+      Status code 200
 
 - [ ] How can we partition our application into sub-applications?
+      We can use Routing or nested Routing
 
 ## Minimum Viable Product
 

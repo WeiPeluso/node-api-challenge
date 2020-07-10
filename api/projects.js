@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const Projects = require("../data/helpers/projectModel");
+const { route } = require("./actions");
 
 router.get("/", (req, res) => {
   Projects.get()
@@ -15,6 +16,20 @@ router.get("/", (req, res) => {
       });
     });
 });
+
+router.get("/actions/:id", (req, res) => {
+  const id = req.params.id;
+  Projects.getProjectActions(id)
+    .then((actions) => {
+      res.status(200).json({ actions });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: "Error retrieving the actions",
+      });
+    });
+});
+
 router.post("/", validateProject, (req, res) => {
   const newProject = req.body;
   Projects.insert(newProject)
@@ -24,6 +39,19 @@ router.post("/", validateProject, (req, res) => {
     .catch((error) => {
       res.status(500).json({
         message: "Error adding the project",
+      });
+    });
+});
+
+router.put("/:id", validateProject, (req, res) => {
+  const updatedProject = req.body;
+  Projects.update(req.params.id, updatedProject)
+    .then((post) => {
+      res.status(200).json(post);
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: "The project information could not be modified.",
       });
     });
 });
